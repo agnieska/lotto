@@ -1,6 +1,6 @@
 # DOWNLOAD="wget --no-check-certificate"
 DOWNLOAD="curl --insecure"
-REP="HTML"
+REP="../HTML"
 mkdir $REP
 for i in {1957..2019}
 do
