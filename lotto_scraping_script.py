@@ -81,6 +81,57 @@ def extract_values_create_dict(ul_list):
     return results_list, results_dict
 
 
+def calcul_frequency (results_list):
+    n = len(results_list)
+    # frequency_list = list(np.zeros(50))
+    # pprint(frequency_list)
+    frequency_dict = {}
+    percents_dict = {}
+    for i in range(1, 50):
+        frequency_dict[str(i)] = 0
+        percents_dict[str(i)] = 0
+    # pprint(frequency_dict)
+    # pprint(percents_dict)
+    for el in results_list:
+        numbers = el['numbers']
+        for number in numbers:
+            #frequency_list[number] = frequency_list[number] + 1
+            frequency_dict[str(number)] = frequency_dict[str(number)] + 1
+    # print("Frequency calculated")
+    # pprint(frequency_list)
+    for number in frequency_dict:
+        percents_dict[number] = frequency_dict[number]/n
+    print("Percents calculated")
+    # pprint(frequency_dict)
+    return frequency_dict, percents_dict
+
+
+def calcul_frequency_sorted (results_list):
+    n = len(results_list)
+    #frequency_list = list(np.zeros(50))
+    # pprint(frequency_list)
+    frequency_dict = {}
+    for i in range(1, 50):
+        frequency_dict[str(i)] = 0
+    # pprint(frequency_dict)
+    for el in results_list:
+        numbers = el['numbers']
+        for number in numbers:
+            #frequency_list[number] = frequency_list[number] + 1
+            frequency_dict[str(number)] = frequency_dict[str(number)] + 1
+    # pprint(frequency_list)
+    # pprint(frequency_dict)
+    print("Frequency calculated")
+    d = frequency_dict
+    frequences = [(k , d[k]) for k in sorted(d, key=d.get, reverse=True)]
+    print("Frequency list sorted")
+    percents = [(k, round(d[k]/n,3)) for k in sorted(d, key=d.get, reverse=True)]
+    print("Percents calculated and sorted")
+    # pprint(frequences)
+    # pprint(percents)
+    return frequences, percents
+
+
 ##############################################
 #               MAIN
 ##############################################
@@ -124,29 +175,8 @@ save_json(whole_results_list, "../lotto_values_l.json")
 print("Values saved to json files")
 
 ##################################################
-# calcul frequency
+# calcul frequency and percents
 whole_results_list = load_json("../lotto_values_l.json")
-frequency_list = list(np.zeros(50))
-# pprint(frequency_list)
-frequency_dict = {}
-for i in range(1, 50):
-    frequency_dict[str(i)] = 0
-# pprint(frequency_dict)
-for el in whole_results_list:
-    numbers = el['numbers']
-    for number in numbers:
-        frequency_list[number] = frequency_list[number] + 1
-        frequency_dict[str(number)] = frequency_dict[str(number)] + 1
-# pprint(frequency_list)
-# pprint(frequency_dict)
-print("Frequency calculated")
-
-###################################################
-# sort
-
-d = frequency_dict
-s = [(k, d[k]) for k in sorted(d, key=d.get, reverse=True)]
-# pprint(s)
-print("Frequency list sorted")
-print("The most often are :", s[0:6])
-print("The less often are :", s[-5:])
+frequences, percents = calcul_frequency_sorted(whole_results_list)
+print("The most often winning are :", frequences[0:20])
+print("The less often winning are :", frequences[-20:])
