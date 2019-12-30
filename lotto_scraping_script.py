@@ -100,15 +100,15 @@ def calcul_frequency(results_list):
     # print("Frequency calculated")
     # pprint(frequency_list)
     for number in frequency_dict:
-        percents_dict[number] = frequency_dict[number]/n
-    # print("Percents calculated")
+        percents_dict[number] = round(frequency_dict[number]/n, 3)
+    print("Percents calculated")
     # pprint(frequency_dict)
     return frequency_dict, percents_dict
 
 
 def calcul_frequency_sorted(results_list):
     n = len(results_list)
-    #frequency_list = list(np.zeros(50))
+    # frequency_list = list(np.zeros(50))
     # pprint(frequency_list)
     frequency_dict = {}
     for i in range(1, 50):
@@ -117,21 +117,32 @@ def calcul_frequency_sorted(results_list):
     for el in results_list:
         numbers = el['numbers']
         for number in numbers:
-            #frequency_list[number] = frequency_list[number] + 1
+            # frequency_list[number] = frequency_list[number] + 1
             frequency_dict[str(number)] = frequency_dict[str(number)] + 1
     # pprint(frequency_list)
     # pprint(frequency_dict)
     # print("Frequency calculated")
     d = frequency_dict
-    frequences = [(k , d[k]) for k in sorted(d, key=d.get, reverse=True)]
+    frequences = [(k, d[k]) for k in sorted(d, key=d.get, reverse=True)]
     # print("Frequency list sorted")
-    percents = [(k, round(d[k]/n,3)) for k in sorted(d, key=d.get, reverse=True)]
+    percents = [(k, round(d[k]/ n,3)) for k in sorted(d, key=d.get, reverse=True)]
     # print("Percents calculated and sorted")
     # pprint(frequences)
     # pprint(percents)
     return frequences, percents
 
 
+# Index of acceleration = 1 * [Winning Percent from the last 15 draws] 
+# + 1.25 * [Winning Percent from the last 10 draws] 
+# + 1.5 * [Winning Percent from the last 5 draws]
+
+def calcul_IoA(percents5, percents10, percents15):
+    Ioa_dict = {}
+    for number in range(1,50):
+        Ioa_dict[str(number)] = round(percents15[str(number)] + (1.25 * percents10[str(number)]) + (1.5 * percents5[str(number)]), 3)
+    return Ioa_dict
+
+       
 ##############################################
 #               MAIN
 ##############################################
@@ -195,7 +206,12 @@ frequences10, percents10 = calcul_frequency(last_10_draws)
 print("The frequences for last 10 draws are :", frequences10)
 print("The precents for last 10 draws are :", percents10)
 
-last_20_draws = whole_results_list[-20:]
-frequences20, percents20 = calcul_frequency(last_20_draws)
-print("The frequences for last 20 draws are :", frequences20)
-print("The precents for last 20 draws are :", percents20)
+last_15_draws = whole_results_list[-15:]
+frequences15, percents15 = calcul_frequency(last_15_draws)
+print("The frequences for last 15 draws are :", frequences15)
+print("The precents for last 15 draws are :", percents15)
+
+##################################################
+# calcul Index of Acceleration
+IoA_dict = calcul_IoA(percents5, percents10, percents15)
+print(IoA_dict)
